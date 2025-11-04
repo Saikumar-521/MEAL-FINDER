@@ -86,37 +86,6 @@ async function menubar(){
 }
 menubar();
 
-// // and search items display
-// let searchinput=document.getElementById('input')
-// let searchbtn=document.getElementById('searchbtn')
-// let itemdisplay=document.getElementById('searchitemdisplay')
-
-// //from api
-// async function searchitem(dish){
-//   let res= fetch(FILTER_BY_CATEGORY_API+dish)
-//   let data= (await res).json();
-//   return data
-// }
-// function displaysearchitem(a){
-//    itemdisplay.innerHTML +=`
-//      <div class=" border rounded-1">
-//       <img src='${a.strMealThumb}' alt='${a.strMeal}'</img>
-//      </div>
-//    `
-// }
-// searchbtn.addEventListener('click',()=>{
-//     let a=searchinput.value.trim();
-    
-//     if (res=searchitem(a)){
-//       res.foreach( item =>displaysearchitem(item)
-//     }
-//     else{
-//        itemdisplay.innerHTML=`<h3>Search item is not prepared please choose another one</h3>`
-//     }
-// })
-
-
-
 
 // and search items display
 let searchinput = document.getElementById('input');
@@ -138,18 +107,6 @@ function displaysearchitem(meal) {
          <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
        </div>
    `;
-  // itemdisplay.innerHTML=''
-  // let cards=document.createElement('div')
-  // cards.className='col-12 col-md-6 col-lg-3 m-lg-3 shadow'
-  // cards.innerHTML=`
-  //       <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="img1 pb-1">
-  //       <p class='border bg-secondary-emphasis rounded-2 px-2 d-inline mt-3 '>${meal.strArea}</p>
-  //        <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
-  // `;
-  // cards.addEventListener('click',()=>{
-  //   detailsAboutpaticularitem(meal.idMeal)
-  // });
-  // itemdisplay.appendChild(cards);
 }
 
 searchbtn.addEventListener('click', async () => {
@@ -168,7 +125,7 @@ searchbtn.addEventListener('click', async () => {
              <p class='border bg-secondary-emphasis rounded-2 px-2 d-inline mt-3 '>${meal.strArea}</p>
              <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
        `;
-       cards.addEventListener('click',()=>{
+       cards.addEventListener('click',()=>{ //clicking on particular item display deatails of particular item
          detailsAboutpaticularitem(meal.idMeal)
        });
        itemdisplay.appendChild(cards);  
@@ -183,10 +140,7 @@ searchbtn.addEventListener('click', async () => {
 });
 
 
-
-
-
-// displaying onclick of particular dish on sidebar
+// displaying click of particular dish on sidebar
 // onclick="filter(${items})"
 let displayMeal=document.getElementById('searchitemdisplay') //instead of displaymeal rendor on search item
 let Meald=document.getElementById('meal') //here insread of meald
@@ -214,13 +168,13 @@ function displaydescription(name,discription){
 function displaymeals(meals) {
   displayMeal.innerHTML = ''; 
   // Meald.innerText='MEAL';
-  document.getElementById('mealheading').innerText='MEAL'
+  //document.getElementById('mealheading').innerText='MEAL'
   meals.forEach(meal => {
     let cards = document.createElement('div');
-    cards.className = 'card col-12 col-md-6 col-lg-3 m-lg-3';
+    cards.className = 'col-12 col-md-6 col-lg-3 m-lg-3 shadow-lg bg-body-tertiary rounded';
     cards.innerHTML += `
-      <p>${meal.strMeal}</p>
       <img src='${meal.strMealThumb}' alt='${meal.strMeal}' class='img1 pb-1'>
+      <h5 class='text-dark text-center fw-semi-bold'>${meal.strMeal}</h5>
     `;
     cards.addEventListener('click', () => {
       Meald.innerHTML=' ';
@@ -237,8 +191,6 @@ async function filterByCategory(category) {
   const data = await res.json();
   displaymeals(data.meals);
 }
-
-
 
 
 // details about particular item
