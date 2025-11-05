@@ -12,6 +12,12 @@
 .text-secondary{
   color: var(--bg) !important;
 }
+.bg-warning{
+  color: var(--bg) !important;
+}
+.text-danger{
+  color: var(--bg) !important;
+}
 
 .navbar{
     background-color: var(--bg);
@@ -112,4 +118,7 @@
 }
 .img1:hover {
   transform: scale(0.8);
+}
+.bgorange{
+  background-color: var(--bg);
 }

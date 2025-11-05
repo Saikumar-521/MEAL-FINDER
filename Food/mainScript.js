@@ -29,9 +29,9 @@ async function products() {
       <img src="${item.strCategoryThumb}" alt="${item.strCategory}" class="img1 pb-1 rounded">
     `;
     card.addEventListener('click', () => {
-      displaydescription(item.strCategory,item.strCategoryDescription)
+      displaydescription(item.strCategory,item.strCategoryDescription) //click on particur category display that category
       // console.log( item.strCategory);
-      filterByCategory(item.strCategory);  
+      filterByCategory(item.strCategory);  //same functionality for side bar category 
     });
     product.appendChild(card);
   });
@@ -78,8 +78,8 @@ async function menubar(){
     list.textContent=item.strCategory
     list.addEventListener('click',()=>{
       sidebar.classList.remove('active')
-      displaydescription(item.strCategory,item.strCategoryDescription)
-      filterByCategory(item.strCategory)
+      displaydescription(item.strCategory,item.strCategoryDescription) //same as home productafter clicking on sider bar display first description of item passing name and description
+      filterByCategory(item.strCategory) //then its category will display
     })
     menulist.appendChild(list)
   });
@@ -92,22 +92,22 @@ let searchinput = document.getElementById('input');
 let searchbtn = document.getElementById('searchbtn');
 let itemdisplay = document.getElementById('searchitemdisplay');
 
-// from api
+//search  from api
 async function searchitem(dish) {
   let res = await fetch(SEARCH_API + dish);
   let data = await res.json();
   return data;
 }
 
-function displaysearchitem(meal) {
-  itemdisplay.innerHTML += `
-       <div class="col-12 col-md-6 col-lg-3 m-lg-3 shadow ">
-         <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="img1 pb-1">
-         <p class='border bg-secondary-emphasis rounded-2 px-2 d-inline mt-3 '>${meal.strArea}</p>
-         <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
-       </div>
-   `;
-}
+// function displaysearchitem(meal) {
+//   itemdisplay.innerHTML += `
+//        <div class="col-12 col-md-6 col-lg-3 m-lg-3 shadow ">
+//          <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="img1 pb-1">
+//          <p class='border bg-secondary-emphasis rounded-2 px-2 d-inline mt-3 '>${meal.strArea}</p>
+//          <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
+//        </div>
+//    `;
+// }
 
 searchbtn.addEventListener('click', async () => {
   let m=document.getElementById('meal')
@@ -125,7 +125,7 @@ searchbtn.addEventListener('click', async () => {
              <p class='border bg-secondary-emphasis rounded-2 px-2 d-inline mt-3 '>${meal.strArea}</p>
              <p class="text-black fw-bold rounded px-2 fs-6 fs-md-5 fs-lg-4">${meal.strMeal}</p>
        `;
-       cards.addEventListener('click',()=>{ //clicking on particular item display deatails of particular item
+       cards.addEventListener('click',()=>{ //clicking on particular item display full deatails of particular item
          detailsAboutpaticularitem(meal.idMeal)
        });
        itemdisplay.appendChild(cards);  
@@ -200,21 +200,82 @@ async function detailsAboutpaticularitem(item){
    let meal=data.meals[0]
    displayParticularItem(meal)
 }
-function displayParticularItem(item){
-  let itemdisplay=document.getElementById('searchitemdisplay')
-   itemdisplay.innerHTML=`
-   <div class='col-5'>
-     <img src='${item.strMealThumb}' class='w-full h-10 ' >
-   </div>
-   <div class='col-7'>
-    <h4 class='text-danger border-bottom text-secondary pb-3'>${item.strMeal}</h4>
-    <h3>CATEGORY: ${item.strCategory}<h3>
-    <h6>SOURCE: ${item.strSource}
-    <p>Tags: ${item.strTags}</p>
-    <div class='bg-danger p-2'>
-     
+
+function displayParticularItem(item) {
+
+  let ingredientslist = '';
+  for (let i = 1; i <= 20; i++) {
+    let ingredient = item[`strIngredient${i}`];
+    if (ingredient && ingredient.trim() !== '') {
+      ingredientslist += `<li class="list-group-item border-0 bg-transparent">${ingredient}</li>`;
+    }
+  }
+
+  let measurementlist = '';
+  for (let i = 1; i <= 20; i++) {
+    let measurement = item[`strMeasure${i}`];
+    if (measurement && measurement.trim() !== '') {
+      measurementlist += `
+        <li class="list-group-item border-0 bg-transparent">
+          <i class="fa-solid fa-spoon text-danger me-2"></i> ${measurement}
+        </li>`;
+    }
+  }
+  let instructionList = '';
+  if (item.strInstructions && item.strInstructions.trim() !== '') {
+    let steps = item.strInstructions.split('.').filter(step => step.trim() !== '');
+    instructionList = steps.map(step => `<li>${step.trim()}.</li>`).join('');
+  } else {
+    instructionList = '<li>No instructions found.</li>';
+  }
+
+  itemdisplay.innerHTML = `
+    <div class="bgorange d-flex align-items-center mb-3 rounded">
+      <i class="fa-solid fa-house text-white fs-4 me-2"></i>
+      <h4 class="text-white px-3 py-2 rounded mb-0">${item.strMeal}</h4>
     </div>
-   </div>
-   `
+
+    <h3 class="text-dark py-2 fw-bold border-bottom-danger">Meal Details</h3>
+
+    <div class="row bg-light rounded shadow p-4 mt-3">
+      <div class="col-md-5 text-center">
+        <img src="${item.strMealThumb}" class="img-fluid rounded border border-3 shadow-sm" alt="${item.strMeal}">
+      </div>
+
+      <div class="col-md-7">
+        <h3 class="text-danger border-bottom pb-2">${item.strMeal}</h3>
+        <p><strong>Category:</strong> ${item.strCategory}</p>
+        <p><strong>Area:</strong> ${item.strArea}</p>
+        <p><strong>Source:</strong> 
+          <a href="${item.strSource}" target="_blank" class="text-primary text-decoration-none">
+            ${item.strSource}
+          </a>
+        </p>
+        <p class="bg-secondary-emphasis p-2 "><strong class='text-dander p-2 border-dark rounded'>Tags:</strong>${item.strTags}</p>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="text-dark p-2 fw-bold">Ingredients</h5>
+            <ol class="list-group list-group-numbered">
+              ${ingredientslist}
+            </ol>
+          </div>
+          <div class="col-md-6">
+            <h5 class="text-dark p-2 fw-bold">Measurements</h5>
+            <ul class="list-group">
+              ${measurementlist}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-4">
+        <h5 class="text-dark fw-bold p-2">Instructions</h5>
+        <ol class="ps-3">
+          ${instructionList}
+        </ol>
+      </div>
+    </div>
+  `;
 }
 
